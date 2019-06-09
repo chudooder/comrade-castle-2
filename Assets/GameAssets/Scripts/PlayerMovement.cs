@@ -7,6 +7,7 @@ struct PlayerInput {
     public uint id;
     public float xinput;
     public bool jump;
+    public float aimAngle;
 }
 
 public class PlayerMovement : NetworkBehaviour
@@ -22,6 +23,7 @@ public class PlayerMovement : NetworkBehaviour
     public float jumpForce;
 
     private Rigidbody rb;
+    private Transform weapon;
     private float playerHeight;
 
     [SyncVar]
@@ -34,6 +36,7 @@ public class PlayerMovement : NetworkBehaviour
     void Start()
     {
         this.rb = GetComponent<Rigidbody>();
+        this.weapon = transform.Find("WeaponPivot");
         this.playerHeight = GetComponent<BoxCollider>().size.y / 2;
 
         if(isLocalPlayer) {
@@ -47,25 +50,40 @@ public class PlayerMovement : NetworkBehaviour
         if(isLocalPlayer) {
             float xinput = Input.GetAxisRaw("Horizontal");
             bool jump = Input.GetButton("Jump");
-            CmdMove(xinput, jump);
+            Vector3 mousePos = ProjectMouseToPlane();
+            float aimAngle = Mathf.Atan2(mousePos.y - transform.position.y, mousePos.x - transform.position.x) * 180 / Mathf.PI;
+            CmdMove(xinput, jump, aimAngle);
         }
+
+        ProcessInput(input);
     }
 
     void FixedUpdate()
     {
-        ProcessInput(input);
+        ProcessFixedUpdateInput(input);
     }
 
     [Command]
-    void CmdMove(float xinput, bool jump) {
+    void CmdMove(float xinput, bool jump, float aimAngle) {
         this.input = new PlayerInput {
             id = inputId++,
             xinput = xinput,
-            jump = jump
+            jump = jump,
+            aimAngle = aimAngle
         };
     }
 
     void ProcessInput(PlayerInput input) {
+        if(input.aimAngle > 90) {
+            weapon.rotation = Quaternion.AngleAxis(180, Vector3.up) * Quaternion.AngleAxis(180 - input.aimAngle, Vector3.forward);
+        } else if(input.aimAngle < -90) {
+            weapon.rotation = Quaternion.AngleAxis(180, Vector3.up) * Quaternion.AngleAxis(-180 - input.aimAngle, Vector3.forward);
+        } else {
+            weapon.rotation = Quaternion.AngleAxis(input.aimAngle, Vector3.forward);
+        }
+    }
+
+    void ProcessFixedUpdateInput(PlayerInput input) {
         Vector3 velocity = rb.velocity;
         bool isGrounded = IsGrounded();
 
@@ -97,5 +115,16 @@ public class PlayerMovement : NetworkBehaviour
         }
 
         return true;
+    }
+
+    private Vector3 ProjectMouseToPlane() {
+        Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane plane = new Plane(Vector3.back, new Vector3(0, 0, 0));
+        float distance;
+        if (plane.Raycast(cameraRay, out distance)) {
+            Vector3 point = cameraRay.GetPoint(distance);
+            return point;
+        }
+        return Vector3.right;
     }
 }

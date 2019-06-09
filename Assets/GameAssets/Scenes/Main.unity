@@ -437,11 +437,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 866888172}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bf5c082d04f7ea459fcd30e60b5bd70, type: 3}
+  m_Script: {fileID: 11500000, guid: 41f84591ce72545258ea98cb7518d8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncInterval: 0.1
-  prizePrefab: {fileID: 0}
 --- !u!114 &866888175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -457,7 +455,7 @@ MonoBehaviour:
   serverOnly: 0
   localPlayerAuthority: 0
   m_AssetId: 
-  m_SceneId: 3408771250
+  m_SceneId: 3678747981
 --- !u!1 &1260360754
 GameObject:
   m_ObjectHideFlags: 0
@@ -590,11 +588,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1326242433}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bf5c082d04f7ea459fcd30e60b5bd70, type: 3}
+  m_Script: {fileID: 11500000, guid: 41f84591ce72545258ea98cb7518d8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncInterval: 0.1
-  prizePrefab: {fileID: 0}
 --- !u!114 &1326242436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -610,7 +606,7 @@ MonoBehaviour:
   serverOnly: 0
   localPlayerAuthority: 0
   m_AssetId: 
-  m_SceneId: 3985869477
+  m_SceneId: 2302845033
 --- !u!1 &1666658675
 GameObject:
   m_ObjectHideFlags: 0
@@ -807,7 +803,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 1740848011561395876, guid: 4d9d6372cc6e9dc4eac2f30c52fc893a,
     type: 3}
   autoCreatePlayer: 1
-  playerSpawnMethod: 0
+  playerSpawnMethod: 1
   spawnPrefabs: []
 --- !u!4 &2101249954
 Transform:
