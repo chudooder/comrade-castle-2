@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb7a8907d79cbba49862fbe1c86bd250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncInterval: 0.1
+  syncInterval: 0.03333
   maxHorizontalWalkSpeed: 8
   walkForce: 1600
   decelForce: 600
@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncInterval: 0.1
+  syncInterval: 0.03333
   compressRotation: 1
 --- !u!1 &2864672749808196558
 GameObject:
