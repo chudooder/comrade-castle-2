@@ -35,14 +35,11 @@ public class PlayerMovement : NetworkBehaviour
     [SyncVar]
     private PlayerInput input;
 
-    [SyncVar(hook = nameof(OnStateUpdate))]
-    private PlayerState state;
-
     /* velocity is updated as follows:
         1. After this.cc.Move is called, velocity is set to the resulting position delta
         2. When the state SyncVar updates, velocity is updated to match the server
     */
-    private Vector3 velocity = new Vector3();
+    public Vector3 velocity = new Vector3();
 
     private uint inputId = 0;
 
@@ -70,12 +67,7 @@ public class PlayerMovement : NetworkBehaviour
             CmdMove(xinput, jump, aimAngle);
         }
 
-        ProcessInput(input);
-
-        // only servers should update the player state
-        if(isServer) {
-            UpdatePlayerState();
-        }
+        ProcessInput(input);        
     }
 
     [Command]
@@ -120,23 +112,10 @@ public class PlayerMovement : NetworkBehaviour
         } else {
             weapon.rotation = Quaternion.AngleAxis(input.aimAngle, Vector3.forward);
         }
-    }
-
-    void UpdatePlayerState() {
-        this.state = new PlayerState {
-            position = transform.position,
-            velocity = velocity
-        };
-    }
-
-    // hooks only run on client
-    void OnStateUpdate(PlayerState newState) {
-        this.transform.position = newState.position;
-        this.velocity = newState.velocity;
-    }
+    }    
 
     private bool IsGrounded() {
-        return state.velocity.y > -0.01 && Physics.Raycast(transform.position, -Vector3.up, playerHeight/2 + 0.05f);
+        return velocity.y > -0.01 && Physics.Raycast(transform.position, -Vector3.up, playerHeight/2 + 0.05f);
     }
 
     private bool CanAddForce(float xinput, Vector3 velocity) {
