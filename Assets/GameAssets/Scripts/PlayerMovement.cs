@@ -90,8 +90,6 @@ public class PlayerMovement : NetworkBehaviour
 
     void ProcessInput(PlayerInput input) {
         bool isGrounded = IsGrounded();
-        print(isGrounded);
-
         float deltaTime = Time.deltaTime;
 
         if (input.xinput == 0 && isGrounded) {
@@ -125,14 +123,16 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     void UpdatePlayerState() {
-        this.state.position = transform.position;
-        this.state.velocity = cc.velocity;
+        this.state = new PlayerState {
+            position = transform.position,
+            velocity = velocity
+        };
     }
 
     // hooks only run on client
-    void OnStateUpdate() {
-        this.transform.position = state.position;
-        this.velocity = state.velocity;
+    void OnStateUpdate(PlayerState newState) {
+        this.transform.position = newState.position;
+        this.velocity = newState.velocity;
     }
 
     private bool IsGrounded() {
