@@ -38,6 +38,12 @@ public class PlayerMovement : NetworkBehaviour
     [SyncVar(hook = nameof(OnStateUpdate))]
     private PlayerState state;
 
+    /* velocity is updated as follows:
+        1. After this.cc.Move is called, velocity is set to the resulting position delta
+        2. When the state SyncVar updates, velocity is updated to match the server
+    */
+    private Vector3 velocity = new Vector3();
+
     private uint inputId = 0;
 
 
@@ -83,7 +89,6 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     void ProcessInput(PlayerInput input) {
-        Vector3 velocity = cc.velocity;
         bool isGrounded = IsGrounded();
         print(isGrounded);
 
@@ -108,6 +113,7 @@ public class PlayerMovement : NetworkBehaviour
         }
 
         this.cc.Move(deltaTime * velocity);
+        this.velocity = this.cc.velocity;
 
         if(input.aimAngle > 90) {
             weapon.rotation = Quaternion.AngleAxis(180, Vector3.up) * Quaternion.AngleAxis(180 - input.aimAngle, Vector3.forward);
@@ -125,7 +131,8 @@ public class PlayerMovement : NetworkBehaviour
 
     // hooks only run on client
     void OnStateUpdate() {
-
+        this.transform.position = state.position;
+        this.velocity = state.velocity;
     }
 
     private bool IsGrounded() {
